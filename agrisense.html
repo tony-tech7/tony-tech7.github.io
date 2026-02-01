@@ -40,47 +40,48 @@
 
   <!-- Embed script -->
   <script>
-    async function loadWatsonEmbed() {
-      try {
-        // 1. Request short-lived token from backend
-        const res = await fetch("https://YOUR_BACKEND_URL/get-token");
-        const data = await res.json();
-        const token = data.token;
+async function loadWatsonEmbed() {
+  try {
+    // Fetch short-lived JWT from your deployed backend
+    const res = await fetch("https://tony-tech7-github-io.onrender.com/get-token");
+    const data = await res.json();
+    const token = data.token;
 
-        // 2. Configure the embedded agent
-        window.wxOConfiguration = {
-          orchestrationID: "9ecb30ce1ca742deb8483bb6d8832abc_c83567fe-8d32-4f0a-81d4-72627bf337b4",
-          hostURL: "https://eu-gb.watson-orchestrate.cloud.ibm.com",
-          rootElementID: "root",
-          deploymentPlatform: "ibmcloud",
-          crn: "crn:v1:bluemix:public:watsonx-orchestrate:eu-gb:a/9ecb30ce1ca742deb8483bb6d8832abc:c83567fe-8d32-4f0a-81d4-72627bf337b4::",
-          chatOptions: {
-            agentId: "4f25bb83-2505-4cd7-89e1-9b9f24a8af56",
-            agentEnvironmentId: "a08d1085-23ad-4f2b-869a-61c2908c6be3"
-          },
-          authToken: token
-        };
+    // Configure Watsonx Orchestrate Embedded Agent
+    window.wxOConfiguration = {
+      orchestrationID: "9ecb30ce1ca742deb8483bb6d8832abc_c83567fe-8d32-4f0a-81d4-72627bf337b4",
+      hostURL: "https://eu-gb.watson-orchestrate.cloud.ibm.com",
+      rootElementID: "root",
+      deploymentPlatform: "ibmcloud",
+      crn: "crn:v1:bluemix:public:watsonx-orchestrate:eu-gb:a/9ecb30ce1ca742deb8483bb6d8832abc:c83567fe-8d32-4f0a-81d4-72627bf337b4::",
+      chatOptions: {
+        agentId: "4f25bb83-2505-4cd7-89e1-9b9f24a8af56",
+        agentEnvironmentId: "a08d1085-23ad-4f2b-869a-61c2908c6be3"
+      },
+      authToken: token
+    };
 
-        // 3. Load IBM embed script
-        const script = document.createElement("script");
-        script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
-        script.onload = () => {
-          if (window.wxoLoader && typeof wxoLoader.init === "function") {
-            wxoLoader.init();
-            document.getElementById("loader").style.display = "none";
-          }
-        };
-        script.onerror = () => {
-          document.getElementById("loader").textContent = "Failed to load AI assistant.";
-        };
-        document.head.appendChild(script);
-      } catch (err) {
-        console.error(err);
-        document.getElementById("loader").textContent = "Failed to load AI assistant.";
+    // Load Watson embed script
+    const script = document.createElement("script");
+    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+    script.onload = () => {
+      if (window.wxoLoader && typeof wxoLoader.init === "function") {
+        wxoLoader.init();
+        document.getElementById("loader").style.display = "none";
       }
-    }
+    };
+    script.onerror = () => {
+      document.getElementById("loader").textContent = "Failed to load AI assistant.";
+    };
+    document.head.appendChild(script);
+  } catch (err) {
+    console.error(err);
+    document.getElementById("loader").textContent = "Failed to load AI assistant.";
+  }
+}
 
-    loadWatsonEmbed();
-  </script>
+loadWatsonEmbed();
+</script>
 </body>
 </html>
+
