@@ -1,40 +1,35 @@
 // server.js
-require('dotenv').config();
+require("dotenv").config();
 const express = require("express");
 const axios = require("axios");
 const cors = require("cors");
 
 const app = express();
-app.use(cors()); // allow requests from your frontend (GitHub Pages)
+app.use(cors({ origin: "*" })); // allow frontend to fetch
 
 const PORT = process.env.PORT || 3000;
-
-// IBM Cloud API Key (store securely in .env)
 const IBM_API_KEY = process.env.IBM_API_KEY;
-const ORCHESTRATE_INSTANCE_URL = process.env.ORCHESTRATE_INSTANCE_URL; 
-// e.g. "https://api.eu-gb.watson-orchestrate.cloud.ibm.com/instances/c83567fe-8d32-4f0a-81d4-72627bf337b4"
+const ORCHESTRATE_INSTANCE_URL = process.env.ORCHESTRATE_INSTANCE_URL;
 
-// Endpoint to generate short-lived JWT token
+// Endpoint to generate short-lived token
 app.get("/get-token", async (req, res) => {
   try {
     const response = await axios.post(
-      `${ORCHESTRATE_INSTANCE_URL}/v1/embedded-tokens`,
+      `${ORCHESTRATE_INSTANCE_URL}/v1/tokens`,
       {},
       {
-        headers: {
-          "Authorization": `Bearer ${IBM_API_KEY}`,
-          "Content-Type": "application/json"
+        auth: {
+          username: "apikey",
+          password: IBM_API_KEY
         }
       }
     );
 
     res.json({ token: response.data.token });
   } catch (err) {
-    console.error(err.response?.data || err.message);
+    console.error("Error generating token:", err.message, err.response?.data);
     res.status(500).json({ error: "Failed to generate token" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
