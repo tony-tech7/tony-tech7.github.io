@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AgriSense AI | Embedded Agent Demo</title>
   <link rel="preconnect" href="https://eu-gb.watson-orchestrate.cloud.ibm.com">
-
   <style>
     * { box-sizing: border-box; }
 
@@ -63,7 +62,7 @@
       min-height: 400px;
     }
 
-    #root { width: 100%; height: 500px; } /* Fixed height to ensure visibility */
+    #root { width: 100%; height: 500px; }
 
     .loader {
       position: absolute;
@@ -85,10 +84,23 @@
       background: #f8fafc;
     }
 
+    .back-home {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 8px 16px;
+      background: #22c55e;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: background 0.3s;
+    }
+
+    .back-home:hover { background: #16a34a; }
+
     @media (max-width: 900px) { .content { grid-template-columns: 1fr; } }
   </style>
 </head>
-
 <body>
   <div class="app">
     <header>
@@ -105,9 +117,7 @@
         <p>
           The same agent can be deployed to WhatsApp, Teams, or SMS in production.
         </p>
-        <p>
-          <a href="index.html" style="color:#22c55e; text-decoration:none;">← Back to Home</a>
-        </p>
+        <a href="index.html" class="back-home">← Back to Home</a>
       </div>
 
       <div class="chat">
@@ -121,43 +131,45 @@
     </footer>
   </div>
 
-  <!-- EMBED CODE -->
+  <!-- FIXED EMBED CODE -->
   <script>
-  window.wxOConfiguration = {
-    orchestrationID: "9ecb30ce1ca742deb8483bb6d8832abc_c83567fe-8d32-4f0a-81d4-72627bf337b4",
-    hostURL: "https://eu-gb.watson-orchestrate.cloud.ibm.com",
-    rootElementID: "root",
-    deploymentPlatform: "ibmcloud",
-    crn: "crn:v1:bluemix:public:watsonx-orchestrate:eu-gb:a/9ecb30ce1ca742deb8483bb6d8832abc:c83567fe-8d32-4f0a-81d4-72627bf337b4::",
-    chatOptions: {
-        agentId: "4f25bb83-2505-4cd7-89e1-9b9f24a8af56", 
+    window.wxOConfiguration = {
+      orchestrationID: "9ecb30ce1ca742deb8483bb6d8832abc_c83567fe-8d32-4f0a-81d4-72627bf337b4",
+      hostURL: "https://eu-gb.watson-orchestrate.cloud.ibm.com",
+      rootElementID: "root",
+      deploymentPlatform: "ibmcloud",
+      crn: "crn:v1:bluemix:public:watsonx-orchestrate:eu-gb:a/9ecb30ce1ca742deb8483bb6d8832abc:c83567fe-8d32-4f0a-81d4-72627bf337b4::",
+      chatOptions: {
+        agentId: "4f25bb83-2505-4cd7-89e1-9b9f24a8af56",
         agentEnvironmentId: "a08d1085-23ad-4f2b-869a-61c2908c6be3"
-    }
-  };
-
-  (function loadWatsonEmbed() {
-    const script = document.createElement('script');
-    script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
-    script.async = true;
-
-    script.onload = () => {
-      if (window.wxoLoader && typeof wxoLoader.init === 'function') {
-        // Hide loader div once initialized
-        wxoLoader.init();
-        const loader = document.getElementById('loader');
-        if (loader) loader.style.display = 'none';
-      } else {
-        console.error("wxoLoader did not initialize properly.");
       }
     };
 
-    script.onerror = () => {
-      console.error("Failed to load wxoLoader.js script from IBM.");
-    };
+    (function loadWatsonEmbed() {
+      const script = document.createElement('script');
+      script.src = `${window.wxOConfiguration.hostURL}/wxochat/wxoLoader.js?embed=true`;
+      script.async = true;
 
-    document.head.appendChild(script);
-  })();
-</script>
+      script.onload = () => {
+        if (window.wxoLoader && typeof wxoLoader.init === 'function') {
+          wxoLoader.init();
+          const loader = document.getElementById('loader');
+          if (loader) loader.style.display = 'none';
+        } else {
+          console.error("wxoLoader did not initialize properly.");
+          const loader = document.getElementById('loader');
+          if (loader) loader.textContent = "Failed to load AI assistant.";
+        }
+      };
+
+      script.onerror = () => {
+        console.error("Failed to load wxoLoader.js script from IBM.");
+        const loader = document.getElementById('loader');
+        if (loader) loader.textContent = "Failed to load AI assistant.";
+      };
+
+      document.head.appendChild(script);
+    })();
+  </script>
 </body>
 </html>
-
